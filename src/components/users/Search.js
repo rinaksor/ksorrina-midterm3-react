@@ -14,6 +14,10 @@ const Search = () => {
       console.error("Error fetching data:", error);
     }
   };
+
+  const clearUsers = () => {
+    setUsers([]);
+  };
   const onSubmit = (e) => {
     e.preventDefault();
     if (text === "") {
@@ -40,6 +44,12 @@ const Search = () => {
           className="btn btn-success btn-block"
         />
       </form>
+      {/*Adding Clear button */}
+      {users.length > 0 && (
+        <button className="btn btn-danger btn-block" onClick={clearUsers}>
+          Clear
+        </button>
+      )}
       <Users users={users} />
     </div>
   );
