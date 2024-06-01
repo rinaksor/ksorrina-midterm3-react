@@ -18,6 +18,16 @@ const User = () => {
     }
   };
   const getUserRepos = async (id) => {
+    try {
+      const response = await axios.get(
+        `https://api.github.com/users/${id}/repos `
+      );
+      const data = response.data;
+      console.log(data);
+      setRepos(data);
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
     // To be completed ...
     // This is the small exercise for students
     // Students will write the code to fetch the user's repositories
@@ -115,7 +125,7 @@ const User = () => {
         <div className="badge badge-light">Repository: {public_repos}</div>
         <div className="badge badge-dark">Gist: {public_gists}</div>
       </div>
-      <Repos repos={repos} />
+      {/* <Repos repos={repos} /> */}
     </Fragment>
   );
 };
