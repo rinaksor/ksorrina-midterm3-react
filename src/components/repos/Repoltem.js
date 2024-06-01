@@ -1,14 +1,16 @@
 import React from "react";
-import { Link } from "react-router-dom/cjs/react-router-dom.min";
+import { Link } from "react-router-dom";
 
 const RepoItem = (props) => {
-    const { name, full_name, owner } = props.repo;
+    const { name, description, deployments_url } = props.repo;
 
     return (
         <div className="card repo-center">
-            <p>{name}</p>
-            <p>{full_name}</p>
-            <p>{owner.login}</p> 
+            <p>Name : {name}</p>
+            <p>Description : {description}</p>
+            <Link to={deployments_url} target="_blank" rel="noreferrer">
+                <button className="btn btn-dark">View on Github</button>
+            </Link>
         </div>
     );
 };

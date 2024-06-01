@@ -125,7 +125,7 @@ const User = () => {
         <div className="badge badge-light">Repository: {public_repos}</div>
         <div className="badge badge-dark">Gist: {public_gists}</div>
       </div>
-      {/* <Repos repos={repos} /> */}
+      <Repos repos={repos} />
     </Fragment>
   );
 };
