@@ -1,33 +1,55 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Users from "./Users";
+import { searchUsers } from "../../apis/api";
+
 const Search = () => {
   const [text, setText] = useState("");
   const [users, setUsers] = useState([]);
-  const searchUsers = async (text) => {
-    try {
-      const response = await axios.get(
-        `https://api.github.com/search/users?q=${text} `
-      );
-      setUsers(response.data.items);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+
+  useEffect(() => {
+    const searchStore = sessionStorage.getItem("searchingStore");
+    if (searchStore) {
+      setText(searchStore);
+
+      searchUsers(searchStore).then((data) => {
+        if (Array.isArray(data)) {
+          setUsers(data);
+        } else {
+          setUsers([]);
+        }
+      });
     }
-  };
+  }, []);
 
   const clearUsers = () => {
+    setText("");
     setUsers([]);
+
+    sessionStorage.removeItem("searchingStore");
   };
+
   const onSubmit = (e) => {
     e.preventDefault();
+    console.log("Form submitted");
     if (text === "") {
       alert("Please enter something");
     } else {
-      searchUsers(text);
+      searchUsers(text).then((data) => {
+        console.log("Search results:", data);
+        if (Array.isArray(data)) {
+          setUsers(data);
+        } else {
+          setUsers([]);
+        }
+        sessionStorage.setItem("searchingStore", text);
+      });
       setText("");
     }
   };
+
   const onChange = (e) => setText(e.target.value);
+
   return (
     <div>
       <form onSubmit={onSubmit} className="form">
@@ -44,7 +66,6 @@ const Search = () => {
           className="btn btn-success btn-block"
         />
       </form>
-      {/*Adding Clear button */}
       {users.length > 0 && (
         <button className="btn btn-danger btn-block" onClick={clearUsers}>
           Clear
@@ -54,4 +75,5 @@ const Search = () => {
     </div>
   );
 };
+
 export default Search;

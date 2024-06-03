@@ -2,41 +2,22 @@ import axios from "axios";
 import React, { Fragment, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
 import Repos from "../repos/Repos";
+import { getUser, getUserRepos } from "../../apis/api";
+
 const User = () => {
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [repos, setRepos] = useState([]);
-  const getUser = async (username) => {
-    try {
-      const response = await axios.get(
-        `https://api.github.com/users/${username}`
-      );
-      const data = response.data;
-      setUser(data);
-    } catch (error) {
-      console.error("Error fetching data:", error.message);
-    }
-  };
-  const getUserRepos = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://api.github.com/users/${id}/repos `
-      );
-      const data = response.data;
-      console.log(data);
-      setRepos(data);
-    } catch (error) {
-      console.error("Error fetching data:", error.message);
-    }
-    // To be completed ...
-    // This is the small exercise for students
-    // Students will write the code to fetch the user's repositories
-    // Then display the repositories in the User component
-  };
+
   useEffect(() => {
-    getUser(id);
-    getUserRepos(id);
+    getUser(id).then((data)=>{
+      setUser(data);
+    });
+    getUserRepos(id).then((data)=>{
+      setRepos(data);
+    });
   }, []);
+
   const {
     name,
     avatar_url,
