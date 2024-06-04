@@ -1,32 +1,19 @@
-import axios from "axios";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Users from "./Users";
 import { searchUsers } from "../../apis/api";
+import { useStore, actions } from "../store";
 
 const Search = () => {
-  const [text, setText] = useState("");
-  const [users, setUsers] = useState([]);
+  const [state, dispatch] = useStore();
+  const [text, setText] = useState(state.text);
+  const [users, setUsers] = useState(state.users);
 
-  useEffect(() => {
-    const searchStore = sessionStorage.getItem("searchingStore");
-    if (searchStore) {
-      setText(searchStore);
-
-      searchUsers(searchStore).then((data) => {
-        if (Array.isArray(data)) {
-          setUsers(data);
-        } else {
-          setUsers([]);
-        }
-      });
-    }
-  }, []);
 
   const clearUsers = () => {
     setText("");
     setUsers([]);
-
-    sessionStorage.removeItem("searchingStore");
+    dispatch(actions.setKey(""));
+    dispatch(actions.setUsers([]));
   };
 
   const onSubmit = (e) => {
@@ -36,15 +23,11 @@ const Search = () => {
       alert("Please enter something");
     } else {
       searchUsers(text).then((data) => {
-        console.log("Search results:", data);
-        if (Array.isArray(data)) {
-          setUsers(data);
-        } else {
-          setUsers([]);
-        }
-        sessionStorage.setItem("searchingStore", text);
+        console.log(data);
+        setUsers(data);
+        dispatch(actions.setUsers(data));
       });
-      setText("");
+      dispatch(actions.setKey(text));
     }
   };
 
