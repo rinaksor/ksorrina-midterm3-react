@@ -3,9 +3,13 @@ import { BrowserRouter as Router } from "react-router-dom";
 import "./App.css";
 import Home from "./components/layout/Home";
 import Navbar from "./components/layout/Navbar";
+import { useStore } from "./components/store";
 const App = () => {
+  const [state] = useStore();
+  const mode = state.mode;
+  document.body.className = mode === "dark" ? "bg-dark" : "bg-light";
   return (
-    <div className="App">
+    <div className={`App ${mode}`}>
       <Router>
         <Navbar />
         <Home />
